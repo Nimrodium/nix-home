@@ -4,6 +4,8 @@
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    zen-browser.url = "github:conneroisu/zen-browser-flake";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -12,7 +14,7 @@
   };
 
   outputs =
-    { nixpkgs, home-manager, nixgl,... }:
+    { nixpkgs, home-manager, nixgl,zen-browser,... }:
 
     let
       system = "x86_64-linux";
@@ -27,7 +29,7 @@
       homeConfigurations."kyle" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [ ./home.nix ];
-        extraSpecialArgs = { inherit nixgl; };
+        extraSpecialArgs = { inherit nixgl; inherit zen-browser; };
       };
     };
 }

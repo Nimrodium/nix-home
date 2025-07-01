@@ -1,33 +1,21 @@
-{ config, pkgs, nixgl,... }:
+{ config, pkgs, nixgl,zen-browser,... }:
 
 {
-  # Home Manager needs a bit of information about you and the paths it should
-  # manage.
   home.username = "kyle";
   home.homeDirectory = "/home/kyle";
-
-  # This value determines the Home Manager release that your configuration is
-  # compatible with. This helps avoid breakage when a new Home Manager release
-  # introduces backwards incompatible changes.
-  #
-  # You should not change this value, even if you update Home Manager. If you do
-  # want to update the value, then make sure to first check the Home Manager
-  # release notes.
-  home.stateVersion = "25.05"; # Please read the comment before changing.
+  home.stateVersion = "25.05";
 
   nixGL.packages = nixgl.packages;
   # nixGL.defaultWrapper = "mesa";
   # nixGL.installScripts = [ "mesa" ];
-  # The home.packages option allows you to install Nix packages into your
-  # environment.
   home.packages = [
     pkgs.ytmdesktop
     pkgs.open-webui
     pkgs.nixgl.auto.nixGLDefault
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
-
+    pkgs.inconsolata
+    pkgs.source-code-pro
+    # zen-browser.packages.${pkgs.system}.default
+    zen-browser.packages.${pkgs.system}.default
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
@@ -56,22 +44,6 @@
     #   org.gradle.daemon.idletimeout=3600000
     # '';
   };
-
-  # Home Manager can also manage your environment variables through
-  # 'home.sessionVariables'. These will be explicitly sourced when using a
-  # shell provided by Home Manager. If you don't want to manage your shell
-  # through Home Manager then you have to manually source 'hm-session-vars.sh'
-  # located at either
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/kyle/etc/profile.d/hm-session-vars.sh
   home.sessionVariables = {
 
     LIBVIRT_DEFAULT_URI = "qemu:///system";
@@ -79,6 +51,7 @@
     OLLAMA_MODELS = "/mnt/ssd/ollama-models/";
     OLLAMA_HOST = "0.0.0.0";
     DATA_DIR = "/home/kyle/.open-webui";
+
   };
 
   programs = {
@@ -104,8 +77,41 @@
     kitty = {
       enable = true;
       package = config.lib.nixGL.wrap pkgs.kitty;
+      themeFile = "Tomorrow_Night_Bright";
+      font = {
+        # name = "inconsolata";
+        name = "source code pro";
+        size = 11.0;
+      };
+
       settings = {
-        shell = "/usr/bin/sh";
+        shell = "${pkgs.fish}/bin/fish";
+        cursor_shape = "block";
+        open_url_with = "zen-browser"; # browser
+        detect_urls = "yes";
+        underline_hyperlinks = "never";
+        sync_to_monitor = "never";
+        window_padding_width = 5;
+        single_window_padding_width = -1;
+        tab_bar_edge = "bottom";
+        tab_bar_margin_width = 5.0;
+        tab_bar_margin_height = 2.0 ;
+        tab_bar_style = "powerline";
+        tab_bar_align = "left";
+        tab_bar_min_tabs = 2;
+        tab_switch_strategy  = "previous";
+        tab_powerline_style = "slanted";
+
+        active_tab_foreground  = "#000";
+        active_tab_background  = "#eee";
+        active_tab_font_style  = "bold-italic";
+        inactive_tab_foreground= "#444";
+        inactive_tab_background= "#999";
+        inactive_tab_font_style= "normal";
+
+        background_opacity = 0.3;
+        background_blur = 1;
+        # font_size =11.0;
       };
     };
 

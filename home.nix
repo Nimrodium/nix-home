@@ -1,4 +1,4 @@
-{ config, pkgs,nixgl, ... }:
+{ config, pkgs, nixgl,... }:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -15,14 +15,15 @@
   # release notes.
   home.stateVersion = "25.05"; # Please read the comment before changing.
 
-
-  nixGL.defaultWrapper = "mesa";
-  nixGL.installScripts = [ "mesa" ];
+  nixGL.packages = nixgl.packages;
+  # nixGL.defaultWrapper = "mesa";
+  # nixGL.installScripts = [ "mesa" ];
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = [
     pkgs.ytmdesktop
     pkgs.open-webui
+    pkgs.nixgl.auto.nixGLDefault
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -71,9 +72,8 @@
   # or
   #
   #  /etc/profiles/per-user/kyle/etc/profile.d/hm-session-vars.sh
-
   home.sessionVariables = {
-    # EDITOR = "emacs";
+
     LIBVIRT_DEFAULT_URI = "qemu:///system";
     EDITOR = "micro";
     OLLAMA_MODELS = "/mnt/ssd/ollama-models/";
@@ -103,7 +103,10 @@
     bat.enable = true;
     kitty = {
       enable = true;
-      package = config.lib.nixGL.wrappers.mesa pkgs.kitty;
+      package = config.lib.nixGL.wrap pkgs.kitty;
+      settings = {
+        shell = "/usr/bin/sh";
+      };
     };
 
     # ytmdestkop.enable = true;
@@ -119,7 +122,7 @@
         zoxide init --cmd cd fish | source
         fastfetch
       '';
-      shellAbbrs = {
+      shellAliases = {
 
         raspi = "ssh -Y kyle@raspi";
         ls = "eza";

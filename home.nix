@@ -1,4 +1,4 @@
-{ config, pkgs, nixgl,zen-browser,... }:
+{ config, pkgs, nixgl,zen-browser,dotfiles,... }:
 
 {
   home.username = "kyle";
@@ -8,13 +8,43 @@
   nixGL.packages = nixgl.packages;
   # nixGL.defaultWrapper = "mesa";
   # nixGL.installScripts = [ "mesa" ];
+
+
+  # Home Manager is pretty good at managing dotfiles. The primary way to manage
+  # plain files is through 'home.file'.
+  home.file = {
+    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
+    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
+    # # symlink to the Nix store copy.
+    ".screenrc".source = dotfiles/screenrc;
+
+    # # You can also set the file content immediately.
+    # ".gradle/gradle.properties".text = ''
+    #   org.gradle.console=verbose
+    #   org.gradle.daemon.idletimeout=3600000
+    # '';
+  };
+  xdg.configFile = {
+    # "zed/settings.json".source = "./dotfiles/zed/settings.json";
+    # "zed/settings.json".source = "${dotfiles}/zed/settings.json";
+  };
+  home.sessionVariables = {
+
+    LIBVIRT_DEFAULT_URI = "qemu:///system";
+    EDITOR = "micro";
+    OLLAMA_MODELS = "/mnt/ssd/ollama-models/";
+    OLLAMA_HOST = "0.0.0.0";
+    DATA_DIR = "/home/kyle/.open-webui";
+
+  };
+
   home.packages = [
     pkgs.ytmdesktop
-    pkgs.open-webui
-    pkgs.nixgl.auto.nixGLDefault
+    # pkgs.open-webui
+    pkgs.nixgl.nixGLMesa
     pkgs.inconsolata
     pkgs.source-code-pro
-    # zen-browser.packages.${pkgs.system}.default
+    pkgs.krita
     zen-browser.packages.${pkgs.system}.default
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
@@ -29,30 +59,6 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
   ];
-
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
-  home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
-
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
-  };
-  home.sessionVariables = {
-
-    LIBVIRT_DEFAULT_URI = "qemu:///system";
-    EDITOR = "micro";
-    OLLAMA_MODELS = "/mnt/ssd/ollama-models/";
-    OLLAMA_HOST = "0.0.0.0";
-    DATA_DIR = "/home/kyle/.open-webui";
-
-  };
 
   programs = {
     home-manager.enable = true;
@@ -118,9 +124,50 @@
     # ytmdestkop.enable = true;
     # hyprls.enable = true;
     # open-webui.enable = true;
-    zoxide.enable = true;
+    # zoxide.enable = true;
+    zoxide = {
+      enable = true;
+      enableFishIntegration = true;
+    };
     fastfetch.enable = true;
     # _2048-in-terminal.enable = true;
+    #
+
+    zed-editor = {
+      enable = true;
+      # extensions = [
+      #   # "nix"
+      #   # "assembly syntax"
+      #   # "github dark default"
+      #   # "git firefly"
+      #   # "toml"
+      #   # "html"
+      #   # "xml"
+      #   # "activitywatch"
+      # ];
+      # userSettings = {
+      #   theme = "Github Dark Default";
+      #   # show_edit_predictions = false;
+      #   # agent = {
+      #   #   default_profile = "minimal";
+      #   #   default_model = {
+      #   #     provider = "zed.dev";
+      #   #     model = "claude-sonnet-4";
+      #   #   };
+      #   #   version = "2";
+      #   # };
+      #   # features = {
+      #   #   edit_prediction_provider = "supermaven";
+      #   # };
+      #   # ui_font_size = 16;
+      #   # buffer_font_size = 12.0;
+      # };
+    };
+    git = {
+      enable = true;
+      userName = "nimrodium";
+      userEmail = "nimrodium@protonmail.com";
+    };
     fish = {
       enable = true;
       plugins = [];
@@ -142,7 +189,4 @@
       };
     };
   };
-
-  # Let Home Manager install and manage itself.
-  # programs.home-manager.enable = true;
 }

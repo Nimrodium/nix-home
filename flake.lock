@@ -1,5 +1,17 @@
 {
   "nodes": {
+    "dotfiles": {
+      "flake": false,
+      "locked": {
+        "path": "dotfiles",
+        "type": "path"
+      },
+      "original": {
+        "path": "dotfiles",
+        "type": "path"
+      },
+      "parent": []
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1659877975,
@@ -103,6 +115,7 @@
     },
     "root": {
       "inputs": {
+        "dotfiles": "dotfiles",
         "home-manager": "home-manager",
         "nixgl": "nixgl",
         "nixpkgs": "nixpkgs_2",

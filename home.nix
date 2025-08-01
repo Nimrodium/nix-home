@@ -16,7 +16,7 @@
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
-    ".screenrc".source = dotfiles/screenrc;
+    # ".screenrc".source = dotfiles/screenrc;
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
@@ -27,6 +27,8 @@
   xdg.configFile = {
     # "zed/settings.json".source = "./dotfiles/zed/settings.json";
     # "zed/settings.json".source = "${dotfiles}/zed/settings.json";
+    "fastfetch/config.jsonc".source = builtins.toPath ./dotfiles/fastfetch/config.jsonc;
+    "zed/settings.json".source = builtins.toPath ./dotfiles/zed/settings.json;
   };
   home.sessionVariables = {
 
@@ -35,7 +37,6 @@
     OLLAMA_MODELS = "/mnt/ssd/ollama-models/";
     OLLAMA_HOST = "0.0.0.0";
     DATA_DIR = "/home/kyle/.open-webui";
-
   };
 
   home.packages = [
@@ -134,7 +135,7 @@
     #
 
     zed-editor = {
-      enable = true;
+      enable = false;
       # extensions = [
       #   # "nix"
       #   # "assembly syntax"
@@ -173,6 +174,7 @@
       plugins = [];
       interactiveShellInit = ''
         zoxide init --cmd cd fish | source
+        set -g fish_greeting ""
         fastfetch
       '';
       shellAliases = {
